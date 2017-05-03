@@ -4,6 +4,7 @@ import Html.Events exposing (..)
 import Random
 import Html.Attributes exposing (..)
 import String exposing (concat)
+import Arithmetic
 
 -- what started as Elm tutorial code with added reset button
 -- has turned into an attempt to simulate a simple craps table
@@ -14,17 +15,6 @@ main =
 
 
 -- MODEL
--- When a new round starts, the first roll is called a come out Roll
---if 7 or 11 is rolled, you win
---if 2 3 12 is rolled, you lose
--- if 4,5,6,8,9,10 is rolled, you go to a point round
---if in point round, you have a point (the roll that got you to the round)
---in order to win, you must roll the point again before rolling a 7
-
---field bet can be made any time
---The player wins evenmoney if a 3, 4, 9, 10, or 11 is rolled.
--- On most tables a 2 pays double and 12 paystriple.
---The player loses if a 5, 6, 7, or 8 is thrown.
 
 init : (Model, Cmd Msg)
 init =
@@ -38,6 +28,7 @@ type alias Model =
   , fbet : Int
   , die1 : Int
   , die2 : Int
+  , toggle : Int
   }
 
 initialState : Model
@@ -49,6 +40,7 @@ initialState =
   , fbet = 0
   , die1 = 0
   , die2 = 0
+  , toggle = 0
   }
 
 
@@ -56,24 +48,32 @@ initialState =
 
 type Msg =
   PBet1 | PBet5 | PBet10 | PBetAll | Roll |
-    NewFace (Int, Int) | Reset | FBet1 | FBet5 | FBet10 | FBetAll
+    NewFace (Int, Int) | Reset | FBet1 | FBet5 | FBet10 | FBetAll |
+      ShowRules
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
+    ShowRules ->
+      let
+        {toggle} = model
+        tog1 = 1
+        tog0 = 0
+      in
+        if (model.toggle == 1) then
+        ({ model |
+          toggle = 0
+           }, Cmd.none)
+        else
+          ({ model |
+            toggle = 1
+            }, Cmd.none)
     PBet1 ->
       let
         { pbet, cash } = model
         newpBet = pbet + 1
         newCash = cash - 1
 
-      --  newBet =
-      --    if .... then
-      --      bet + 1
-      --    else if ... then
-      --      ..
-      --    else
-      --      bet - 1
       in
         ({ model |
             pbet = newpBet,
@@ -118,13 +118,6 @@ update msg model =
         newfBet = fbet + 1
         newCash = cash - 1
 
-      --  newBet =
-      --    if .... then
-      --      bet + 1
-      --    else if ... then
-      --      ..
-      --    else
-      --      bet - 1
       in
         ({ model |
             fbet = newfBet,
@@ -276,6 +269,10 @@ subscriptions model =
 createImage : Int -> String
 createImage d1 =
     concat ["d", (toString d1), ".jpg"]
+srules : Int -> String
+srules r1 =
+    concat ["rule", (toString r1), ".jpg"]
+
 
 
 -- VIEW
@@ -303,4 +300,9 @@ view model =
     , div [] [ text ("Current Cash: " ++ (toString model.cash))]
     , button [ onClick Roll ] [ text "Roll Die" ]
     , button [ onClick Reset ] [ text "Reset Game"]
+    , div [] [ text ("-------------------------------------")]
+    , button [ onClick ShowRules ] [ text "Show/Hide Rules" ]
+    , div [] [ text ("-------------------------------------")]
+    , img [src (srules model.toggle)] []
+
     ]

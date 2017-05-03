@@ -9018,6 +9018,612 @@ var _elm_lang$html$Html_Events$Options = F2(
 	function (a, b) {
 		return {stopPropagation: a, preventDefault: b};
 	});
+var _lynn$elm_arithmetic$Arithmetic$primeFactors = function (n) {
+	var go = F3(
+		function (p, n, factors) {
+			go:
+			while (true) {
+				if (_elm_lang$core$Native_Utils.cmp(p * p, n) > 0) {
+					return A2(
+						_elm_lang$core$Basics_ops['++'],
+						_elm_lang$core$List$reverse(factors),
+						{
+							ctor: '::',
+							_0: n,
+							_1: {ctor: '[]'}
+						});
+				} else {
+					if (_elm_lang$core$Native_Utils.eq(
+						A2(_elm_lang$core$Basics_ops['%'], n, p),
+						0)) {
+						var _v0 = p,
+							_v1 = (n / p) | 0,
+							_v2 = {ctor: '::', _0: p, _1: factors};
+						p = _v0;
+						n = _v1;
+						factors = _v2;
+						continue go;
+					} else {
+						var _v3 = (p + 1) + A2(_elm_lang$core$Basics_ops['%'], p, 2),
+							_v4 = n,
+							_v5 = factors;
+						p = _v3;
+						n = _v4;
+						factors = _v5;
+						continue go;
+					}
+				}
+			}
+		});
+	return (_elm_lang$core$Native_Utils.cmp(n, 1) < 1) ? {ctor: '[]'} : A3(
+		go,
+		2,
+		n,
+		{ctor: '[]'});
+};
+var _lynn$elm_arithmetic$Arithmetic$primeExponents = function () {
+	var runLengthCons = F2(
+		function (x, acc) {
+			var _p0 = acc;
+			if (_p0.ctor === '[]') {
+				return {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: x, _1: 1},
+					_1: {ctor: '[]'}
+				};
+			} else {
+				var _p3 = _p0._0._0;
+				var _p2 = _p0._1;
+				var _p1 = _p0._0._1;
+				return _elm_lang$core$Native_Utils.eq(x, _p3) ? {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: _p3, _1: _p1 + 1},
+					_1: _p2
+				} : {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: x, _1: 1},
+					_1: {
+						ctor: '::',
+						_0: {ctor: '_Tuple2', _0: _p3, _1: _p1},
+						_1: _p2
+					}
+				};
+			}
+		});
+	return function (_p4) {
+		return A3(
+			_elm_lang$core$List$foldr,
+			runLengthCons,
+			{ctor: '[]'},
+			_lynn$elm_arithmetic$Arithmetic$primeFactors(_p4));
+	};
+}();
+var _lynn$elm_arithmetic$Arithmetic$shiftToOdd = function (n) {
+	var f = F2(
+		function (k, m) {
+			f:
+			while (true) {
+				if (_elm_lang$core$Native_Utils.eq(
+					A2(_elm_lang$core$Basics_ops['%'], m, 2),
+					1)) {
+					return {ctor: '_Tuple2', _0: k, _1: m};
+				} else {
+					var _v7 = k + 1,
+						_v8 = (m / 2) | 0;
+					k = _v7;
+					m = _v8;
+					continue f;
+				}
+			}
+		});
+	return A2(f, 0, n);
+};
+var _lynn$elm_arithmetic$Arithmetic$extendedGcd = F2(
+	function (a, b) {
+		var egcd = F6(
+			function (n1, o1, n2, o2, r, s) {
+				egcd:
+				while (true) {
+					if (_elm_lang$core$Native_Utils.eq(s, 0)) {
+						return {ctor: '_Tuple3', _0: r, _1: o1, _2: o2};
+					} else {
+						var q = (r / s) | 0;
+						var _v9 = o1 - (q * n1),
+							_v10 = n1,
+							_v11 = o2 - (q * n2),
+							_v12 = n2,
+							_v13 = s,
+							_v14 = A2(_elm_lang$core$Basics$rem, r, s);
+						n1 = _v9;
+						o1 = _v10;
+						n2 = _v11;
+						o2 = _v12;
+						r = _v13;
+						s = _v14;
+						continue egcd;
+					}
+				}
+			});
+		var _p5 = A6(
+			egcd,
+			0,
+			1,
+			1,
+			0,
+			_elm_lang$core$Basics$abs(a),
+			_elm_lang$core$Basics$abs(b));
+		var d = _p5._0;
+		var x = _p5._1;
+		var y = _p5._2;
+		var u = (_elm_lang$core$Native_Utils.cmp(a, 0) < 0) ? _elm_lang$core$Basics$negate(x) : x;
+		var v = (_elm_lang$core$Native_Utils.cmp(b, 0) < 0) ? _elm_lang$core$Basics$negate(y) : y;
+		return {ctor: '_Tuple3', _0: d, _1: u, _2: v};
+	});
+var _lynn$elm_arithmetic$Arithmetic$modularInverse = F2(
+	function (a, modulus) {
+		var _p6 = A2(_lynn$elm_arithmetic$Arithmetic$extendedGcd, a, modulus);
+		var d = _p6._0;
+		var x = _p6._1;
+		return _elm_lang$core$Native_Utils.eq(d, 1) ? _elm_lang$core$Maybe$Just(
+			A2(_elm_lang$core$Basics_ops['%'], x, modulus)) : _elm_lang$core$Maybe$Nothing;
+	});
+var _lynn$elm_arithmetic$Arithmetic$chineseRemainder = function (equations) {
+	var fromJustCons = F2(
+		function (x, acc) {
+			var _p7 = x;
+			if (_p7.ctor === 'Just') {
+				return A2(
+					_elm_lang$core$Maybe$map,
+					F2(
+						function (x, y) {
+							return {ctor: '::', _0: x, _1: y};
+						})(_p7._0),
+					acc);
+			} else {
+				return _elm_lang$core$Maybe$Nothing;
+			}
+		});
+	var fromJustList = A2(
+		_elm_lang$core$List$foldr,
+		fromJustCons,
+		_elm_lang$core$Maybe$Just(
+			{ctor: '[]'}));
+	var _p8 = _elm_lang$core$List$unzip(equations);
+	var residues = _p8._0;
+	var moduli = _p8._1;
+	var m = _elm_lang$core$List$product(moduli);
+	var v = A2(
+		_elm_lang$core$List$map,
+		function (x) {
+			return (m / x) | 0;
+		},
+		moduli);
+	var inverses = fromJustList(
+		A3(_elm_lang$core$List$map2, _lynn$elm_arithmetic$Arithmetic$modularInverse, v, moduli));
+	return A2(
+		_elm_lang$core$Maybe$map,
+		function (_p9) {
+			return A3(
+				_elm_lang$core$Basics$flip,
+				F2(
+					function (x, y) {
+						return A2(_elm_lang$core$Basics_ops['%'], x, y);
+					}),
+				m,
+				_elm_lang$core$List$sum(
+					A3(
+						_elm_lang$core$List$map2,
+						F2(
+							function (x, y) {
+								return x * y;
+							}),
+						v,
+						A3(
+							_elm_lang$core$List$map2,
+							F2(
+								function (x, y) {
+									return x * y;
+								}),
+							residues,
+							_p9))));
+		},
+		fromJustList(
+			A3(_elm_lang$core$List$map2, _lynn$elm_arithmetic$Arithmetic$modularInverse, v, moduli)));
+};
+var _lynn$elm_arithmetic$Arithmetic$totient = function (n) {
+	var f = F2(
+		function (p, n) {
+			return ((n * (p - 1)) / p) | 0;
+		});
+	var n_ = _elm_lang$core$Basics$abs(n);
+	return A3(
+		_elm_lang$core$List$foldr,
+		f,
+		n_,
+		A2(
+			_elm_lang$core$List$map,
+			_elm_lang$core$Tuple$first,
+			_lynn$elm_arithmetic$Arithmetic$primeExponents(n_)));
+};
+var _lynn$elm_arithmetic$Arithmetic$gcd = F2(
+	function (a, b) {
+		var gcd_ = F2(
+			function (a, b) {
+				gcd_:
+				while (true) {
+					if (_elm_lang$core$Native_Utils.eq(b, 0)) {
+						return a;
+					} else {
+						var _v16 = b,
+							_v17 = A2(_elm_lang$core$Basics_ops['%'], a, b);
+						a = _v16;
+						b = _v17;
+						continue gcd_;
+					}
+				}
+			});
+		return A2(
+			gcd_,
+			_elm_lang$core$Basics$abs(a),
+			_elm_lang$core$Basics$abs(b));
+	});
+var _lynn$elm_arithmetic$Arithmetic$lcm = F2(
+	function (a, b) {
+		return _elm_lang$core$Basics$abs(
+			((a / A2(_lynn$elm_arithmetic$Arithmetic$gcd, a, b)) | 0) * b);
+	});
+var _lynn$elm_arithmetic$Arithmetic$isCoprimeTo = F2(
+	function (a, b) {
+		return _elm_lang$core$Native_Utils.eq(
+			A2(_lynn$elm_arithmetic$Arithmetic$gcd, a, b),
+			1);
+	});
+var _lynn$elm_arithmetic$Arithmetic$divisorCount = function (_p10) {
+	return _elm_lang$core$List$product(
+		A2(
+			_elm_lang$core$List$map,
+			function (_p11) {
+				var _p12 = _p11;
+				return _p12._1 + 1;
+			},
+			_lynn$elm_arithmetic$Arithmetic$primeExponents(_p10)));
+};
+var _lynn$elm_arithmetic$Arithmetic$divisors = function () {
+	var f = function (_p13) {
+		var _p14 = _p13;
+		return _elm_lang$core$List$concatMap(
+			function (a) {
+				return A2(
+					_elm_lang$core$List$map,
+					function (x) {
+						return Math.pow(_p14._0, x) * a;
+					},
+					A2(_elm_lang$core$List$range, 0, _p14._1));
+			});
+	};
+	return function (_p15) {
+		return _elm_lang$core$List$sort(
+			A3(
+				_elm_lang$core$List$foldr,
+				f,
+				{
+					ctor: '::',
+					_0: 1,
+					_1: {ctor: '[]'}
+				},
+				_lynn$elm_arithmetic$Arithmetic$primeExponents(_p15)));
+	};
+}();
+var _lynn$elm_arithmetic$Arithmetic$properDivisors = function (n) {
+	return A2(
+		_elm_lang$core$List$filter,
+		F2(
+			function (x, y) {
+				return !_elm_lang$core$Native_Utils.eq(x, y);
+			})(n),
+		_lynn$elm_arithmetic$Arithmetic$divisors(n));
+};
+var _lynn$elm_arithmetic$Arithmetic$isMultipleOf = F2(
+	function (a, b) {
+		return _elm_lang$core$Native_Utils.eq(
+			A2(_elm_lang$core$Basics_ops['%'], a, b),
+			0);
+	});
+var _lynn$elm_arithmetic$Arithmetic$divides = F2(
+	function (a, b) {
+		return _elm_lang$core$Native_Utils.eq(
+			A2(_elm_lang$core$Basics_ops['%'], b, a),
+			0);
+	});
+var _lynn$elm_arithmetic$Arithmetic$cubeRoot = function (n) {
+	return Math.pow(n, 1 / 3);
+};
+var _lynn$elm_arithmetic$Arithmetic$intCubeRoot = function (_p16) {
+	return _elm_lang$core$Basics$round(
+		_lynn$elm_arithmetic$Arithmetic$cubeRoot(
+			_elm_lang$core$Basics$toFloat(_p16)));
+};
+var _lynn$elm_arithmetic$Arithmetic$exactIntCubeRoot = function (n) {
+	var s = _lynn$elm_arithmetic$Arithmetic$intCubeRoot(n);
+	return _elm_lang$core$Native_Utils.eq(
+		Math.pow(s, 3),
+		n) ? _elm_lang$core$Maybe$Just(s) : _elm_lang$core$Maybe$Nothing;
+};
+var _lynn$elm_arithmetic$Arithmetic$isCube = function (n) {
+	var r = A2(_elm_lang$core$Basics_ops['%'], n, 63);
+	return (_elm_lang$core$Native_Utils.eq(r, 0) || (_elm_lang$core$Native_Utils.eq(r, 1) || (_elm_lang$core$Native_Utils.eq(r, 8) || (_elm_lang$core$Native_Utils.eq(r, 27) || (_elm_lang$core$Native_Utils.eq(r, 28) || (_elm_lang$core$Native_Utils.eq(r, 35) || (_elm_lang$core$Native_Utils.eq(r, 36) || (_elm_lang$core$Native_Utils.eq(r, 55) || _elm_lang$core$Native_Utils.eq(r, 62))))))))) && _elm_lang$core$Native_Utils.eq(
+		Math.pow(
+			_lynn$elm_arithmetic$Arithmetic$intCubeRoot(n),
+			3),
+		n);
+};
+var _lynn$elm_arithmetic$Arithmetic$intSquareRoot = function (_p17) {
+	return _elm_lang$core$Basics$round(
+		_elm_lang$core$Basics$sqrt(
+			_elm_lang$core$Basics$toFloat(_p17)));
+};
+var _lynn$elm_arithmetic$Arithmetic$exactIntSquareRoot = function (n) {
+	var s = _lynn$elm_arithmetic$Arithmetic$intSquareRoot(n);
+	return _elm_lang$core$Native_Utils.eq(s * s, n) ? _elm_lang$core$Maybe$Just(s) : _elm_lang$core$Maybe$Nothing;
+};
+var _lynn$elm_arithmetic$Arithmetic$isSquare = function (n) {
+	var r = A2(_elm_lang$core$Basics_ops['%'], n, 48);
+	return (_elm_lang$core$Native_Utils.eq(r, 0) || (_elm_lang$core$Native_Utils.eq(r, 1) || (_elm_lang$core$Native_Utils.eq(r, 4) || (_elm_lang$core$Native_Utils.eq(r, 9) || (_elm_lang$core$Native_Utils.eq(r, 16) || (_elm_lang$core$Native_Utils.eq(r, 25) || (_elm_lang$core$Native_Utils.eq(r, 33) || _elm_lang$core$Native_Utils.eq(r, 36)))))))) && _elm_lang$core$Native_Utils.eq(
+		Math.pow(
+			_lynn$elm_arithmetic$Arithmetic$intSquareRoot(n),
+			2),
+		n);
+};
+var _lynn$elm_arithmetic$Arithmetic$primesBelow = function (n) {
+	var trueIndices = function () {
+		var g = F2(
+			function (x, acc) {
+				var _p18 = x;
+				if (_p18.ctor === 'Just') {
+					return {ctor: '::', _0: _p18._0, _1: acc};
+				} else {
+					return acc;
+				}
+			});
+		var f = F2(
+			function (i, pred) {
+				return pred ? _elm_lang$core$Maybe$Just(i) : _elm_lang$core$Maybe$Nothing;
+			});
+		return function (_p19) {
+			return A3(
+				_elm_lang$core$Array$foldr,
+				g,
+				{ctor: '[]'},
+				A2(_elm_lang$core$Array$indexedMap, f, _p19));
+		};
+	}();
+	var sieve = F2(
+		function (p, arr) {
+			var mark = F4(
+				function (i, p, n, arr) {
+					mark:
+					while (true) {
+						if (_elm_lang$core$Native_Utils.cmp(i * p, n) > -1) {
+							return arr;
+						} else {
+							var _v21 = i + 1,
+								_v22 = p,
+								_v23 = n,
+								_v24 = A3(_elm_lang$core$Array$set, i * p, false, arr);
+							i = _v21;
+							p = _v22;
+							n = _v23;
+							arr = _v24;
+							continue mark;
+						}
+					}
+				});
+			return _elm_lang$core$Native_Utils.eq(
+				A2(_elm_lang$core$Array$get, p, arr),
+				_elm_lang$core$Maybe$Just(true)) ? A4(mark, 2, p, n, arr) : arr;
+		});
+	var initial = A3(
+		_elm_lang$core$Array$set,
+		1,
+		false,
+		A3(
+			_elm_lang$core$Array$set,
+			0,
+			false,
+			A2(_elm_lang$core$Array$repeat, n, true)));
+	var ps = {
+		ctor: '::',
+		_0: 2,
+		_1: A2(
+			_elm_lang$core$List$map,
+			function (x) {
+				return (2 * x) + 1;
+			},
+			A2(
+				_elm_lang$core$List$range,
+				1,
+				(_lynn$elm_arithmetic$Arithmetic$intSquareRoot(n) / 2) | 0))
+	};
+	return trueIndices(
+		A3(_elm_lang$core$List$foldr, sieve, initial, ps));
+};
+var _lynn$elm_arithmetic$Arithmetic$safeSquareRoot = function (n) {
+	return (_elm_lang$core$Native_Utils.cmp(n, 0) < 0) ? _elm_lang$core$Maybe$Nothing : _elm_lang$core$Maybe$Just(
+		_elm_lang$core$Basics$sqrt(n));
+};
+var _lynn$elm_arithmetic$Arithmetic$squareRoot = _elm_lang$core$Basics$sqrt;
+var _lynn$elm_arithmetic$Arithmetic$fromBase = function (base) {
+	return A2(
+		_elm_lang$core$List$foldl,
+		F2(
+			function (x, acc) {
+				return (acc * base) + x;
+			}),
+		0);
+};
+var _lynn$elm_arithmetic$Arithmetic$toBase = F2(
+	function (base, n) {
+		var go = F2(
+			function (x, acc) {
+				go:
+				while (true) {
+					if (_elm_lang$core$Native_Utils.cmp(x, 0) < 1) {
+						return acc;
+					} else {
+						var _v25 = (x / base) | 0,
+							_v26 = {
+							ctor: '::',
+							_0: A2(_elm_lang$core$Basics_ops['%'], x, base),
+							_1: acc
+						};
+						x = _v25;
+						acc = _v26;
+						continue go;
+					}
+				}
+			});
+		var n_ = _elm_lang$core$Basics$abs(n);
+		return A2(
+			go,
+			n_,
+			{ctor: '[]'});
+	});
+var _lynn$elm_arithmetic$Arithmetic$isOdd = function (n) {
+	return !_elm_lang$core$Native_Utils.eq(
+		A2(_elm_lang$core$Basics_ops['%'], n, 2),
+		0);
+};
+var _lynn$elm_arithmetic$Arithmetic$powerMod = F3(
+	function (base, exponent, modulus) {
+		var go = F3(
+			function (b, e, r) {
+				go:
+				while (true) {
+					if (_elm_lang$core$Native_Utils.eq(e, 0)) {
+						return r;
+					} else {
+						var r_ = _lynn$elm_arithmetic$Arithmetic$isOdd(e) ? A2(_elm_lang$core$Basics_ops['%'], r * b, modulus) : r;
+						var _v27 = A2(_elm_lang$core$Basics_ops['%'], b * b, modulus),
+							_v28 = (e / 2) | 0,
+							_v29 = r_;
+						b = _v27;
+						e = _v28;
+						r = _v29;
+						continue go;
+					}
+				}
+			});
+		return _elm_lang$core$Native_Utils.eq(modulus, 1) ? 0 : A3(
+			go,
+			A2(_elm_lang$core$Basics_ops['%'], base, modulus),
+			exponent,
+			1);
+	});
+var _lynn$elm_arithmetic$Arithmetic$millerRabin = F2(
+	function (n, witnesses) {
+		var check = F2(
+			function (l, x) {
+				if (_elm_lang$core$Native_Utils.cmp(l, 0) < 1) {
+					return true;
+				} else {
+					var y = A3(_lynn$elm_arithmetic$Arithmetic$powerMod, x, 2, n);
+					return _elm_lang$core$Native_Utils.eq(y, 1) || ((!_elm_lang$core$Native_Utils.eq(y, n - 1)) && A2(check, l - 1, y));
+				}
+			});
+		var _p20 = _lynn$elm_arithmetic$Arithmetic$shiftToOdd(n - 1);
+		var s = _p20._0;
+		var d = _p20._1;
+		var go = function (witnesses) {
+			go:
+			while (true) {
+				var _p21 = witnesses;
+				if (_p21.ctor === '[]') {
+					return true;
+				} else {
+					var _p22 = _p21._1;
+					var x = A3(_lynn$elm_arithmetic$Arithmetic$powerMod, _p21._0, d, n);
+					if (_elm_lang$core$Native_Utils.eq(x, 1) || _elm_lang$core$Native_Utils.eq(x, n - 1)) {
+						var _v31 = _p22;
+						witnesses = _v31;
+						continue go;
+					} else {
+						if (A2(check, s - 1, x)) {
+							return false;
+						} else {
+							var _v32 = _p22;
+							witnesses = _v32;
+							continue go;
+						}
+					}
+				}
+			}
+		};
+		return go(witnesses);
+	});
+var _lynn$elm_arithmetic$Arithmetic$isPrime = function (n) {
+	return (_elm_lang$core$Native_Utils.cmp(n, 13) < 0) ? (_elm_lang$core$Native_Utils.eq(n, 2) || (_elm_lang$core$Native_Utils.eq(n, 3) || (_elm_lang$core$Native_Utils.eq(n, 5) || (_elm_lang$core$Native_Utils.eq(n, 7) || _elm_lang$core$Native_Utils.eq(n, 11))))) : ((_elm_lang$core$Native_Utils.eq(
+		A2(_elm_lang$core$Basics_ops['%'], n, 2),
+		0) || (_elm_lang$core$Native_Utils.eq(
+		A2(_elm_lang$core$Basics_ops['%'], n, 3),
+		0) || _elm_lang$core$Native_Utils.eq(
+		A2(_elm_lang$core$Basics_ops['%'], n, 5),
+		0))) ? false : ((_elm_lang$core$Native_Utils.cmp(n, 1373653) < 0) ? A2(
+		_lynn$elm_arithmetic$Arithmetic$millerRabin,
+		n,
+		{
+			ctor: '::',
+			_0: 2,
+			_1: {
+				ctor: '::',
+				_0: 3,
+				_1: {ctor: '[]'}
+			}
+		}) : A2(
+		_lynn$elm_arithmetic$Arithmetic$millerRabin,
+		n,
+		{
+			ctor: '::',
+			_0: 2,
+			_1: {
+				ctor: '::',
+				_0: 3,
+				_1: {
+					ctor: '::',
+					_0: 5,
+					_1: {
+						ctor: '::',
+						_0: 7,
+						_1: {
+							ctor: '::',
+							_0: 11,
+							_1: {ctor: '[]'}
+						}
+					}
+				}
+			}
+		})));
+};
+var _lynn$elm_arithmetic$Arithmetic$isEven = function (n) {
+	return _elm_lang$core$Native_Utils.eq(
+		A2(_elm_lang$core$Basics_ops['%'], n, 2),
+		0);
+};
+var _user$project$FinalProj$srules = function (r1) {
+	return _elm_lang$core$String$concat(
+		{
+			ctor: '::',
+			_0: 'rule',
+			_1: {
+				ctor: '::',
+				_0: _elm_lang$core$Basics$toString(r1),
+				_1: {
+					ctor: '::',
+					_0: '.jpg',
+					_1: {ctor: '[]'}
+				}
+			}
+		});
+};
 var _user$project$FinalProj$createImage = function (d1) {
 	return _elm_lang$core$String$concat(
 		{
@@ -9037,12 +9643,13 @@ var _user$project$FinalProj$createImage = function (d1) {
 var _user$project$FinalProj$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _user$project$FinalProj$initialState = {point: 0, cash: 100, firstRoll: true, pbet: 0, fbet: 0, die1: 0, die2: 0};
+var _user$project$FinalProj$initialState = {point: 0, cash: 100, firstRoll: true, pbet: 0, fbet: 0, die1: 0, die2: 0, toggle: 0};
 var _user$project$FinalProj$init = {ctor: '_Tuple2', _0: _user$project$FinalProj$initialState, _1: _elm_lang$core$Platform_Cmd$none};
-var _user$project$FinalProj$Model = F7(
-	function (a, b, c, d, e, f, g) {
-		return {point: a, cash: b, firstRoll: c, pbet: d, fbet: e, die1: f, die2: g};
+var _user$project$FinalProj$Model = F8(
+	function (a, b, c, d, e, f, g, h) {
+		return {point: a, cash: b, firstRoll: c, pbet: d, fbet: e, die1: f, die2: g, toggle: h};
 	});
+var _user$project$FinalProj$ShowRules = {ctor: 'ShowRules'};
 var _user$project$FinalProj$FBetAll = {ctor: 'FBetAll'};
 var _user$project$FinalProj$FBet10 = {ctor: 'FBet10'};
 var _user$project$FinalProj$FBet5 = {ctor: 'FBet5'};
@@ -9055,10 +9662,28 @@ var _user$project$FinalProj$update = F2(
 	function (msg, model) {
 		var _p0 = msg;
 		switch (_p0.ctor) {
-			case 'PBet1':
+			case 'ShowRules':
+				var tog0 = 0;
+				var tog1 = 1;
 				var _p1 = model;
-				var pbet = _p1.pbet;
-				var cash = _p1.cash;
+				var toggle = _p1.toggle;
+				return _elm_lang$core$Native_Utils.eq(model.toggle, 1) ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{toggle: 0}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				} : {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{toggle: 1}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'PBet1':
+				var _p2 = model;
+				var pbet = _p2.pbet;
+				var cash = _p2.cash;
 				var newpBet = pbet + 1;
 				var newCash = cash - 1;
 				return {
@@ -9069,9 +9694,9 @@ var _user$project$FinalProj$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'PBet5':
-				var _p2 = model;
-				var pbet = _p2.pbet;
-				var cash = _p2.cash;
+				var _p3 = model;
+				var pbet = _p3.pbet;
+				var cash = _p3.cash;
 				var newpBet = pbet + 5;
 				var newCash = cash - 5;
 				return {
@@ -9082,9 +9707,9 @@ var _user$project$FinalProj$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'PBet10':
-				var _p3 = model;
-				var pbet = _p3.pbet;
-				var cash = _p3.cash;
+				var _p4 = model;
+				var pbet = _p4.pbet;
+				var cash = _p4.cash;
 				var newpBet = pbet + 10;
 				var newCash = cash - 10;
 				return {
@@ -9096,9 +9721,9 @@ var _user$project$FinalProj$update = F2(
 				};
 			case 'PBetAll':
 				var newCash = 0;
-				var _p4 = model;
-				var pbet = _p4.pbet;
-				var cash = _p4.cash;
+				var _p5 = model;
+				var pbet = _p5.pbet;
+				var cash = _p5.cash;
 				var newpBet = pbet + cash;
 				return {
 					ctor: '_Tuple2',
@@ -9108,9 +9733,9 @@ var _user$project$FinalProj$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'FBet1':
-				var _p5 = model;
-				var fbet = _p5.fbet;
-				var cash = _p5.cash;
+				var _p6 = model;
+				var fbet = _p6.fbet;
+				var cash = _p6.cash;
 				var newfBet = fbet + 1;
 				var newCash = cash - 1;
 				return {
@@ -9121,9 +9746,9 @@ var _user$project$FinalProj$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'FBet5':
-				var _p6 = model;
-				var fbet = _p6.fbet;
-				var cash = _p6.cash;
+				var _p7 = model;
+				var fbet = _p7.fbet;
+				var cash = _p7.cash;
 				var newfBet = fbet + 5;
 				var newCash = cash - 5;
 				return {
@@ -9134,9 +9759,9 @@ var _user$project$FinalProj$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'FBet10':
-				var _p7 = model;
-				var fbet = _p7.fbet;
-				var cash = _p7.cash;
+				var _p8 = model;
+				var fbet = _p8.fbet;
+				var cash = _p8.cash;
 				var newfBet = fbet + 10;
 				var newCash = cash - 10;
 				return {
@@ -9148,9 +9773,9 @@ var _user$project$FinalProj$update = F2(
 				};
 			case 'FBetAll':
 				var newCash = 0;
-				var _p8 = model;
-				var fbet = _p8.fbet;
-				var cash = _p8.cash;
+				var _p9 = model;
+				var fbet = _p9.fbet;
+				var cash = _p9.cash;
 				var newfBet = fbet + cash;
 				return {
 					ctor: '_Tuple2',
@@ -9176,16 +9801,16 @@ var _user$project$FinalProj$update = F2(
 			default:
 				var newfBet = 0;
 				var newpBet = 0;
-				var _p9 = model;
-				var pbet = _p9.pbet;
-				var cash = _p9.cash;
-				var fbet = _p9.fbet;
+				var _p10 = model;
+				var pbet = _p10.pbet;
+				var cash = _p10.cash;
+				var fbet = _p10.fbet;
 				var pwin = (pbet + pbet) + cash;
 				var fwin = (fbet + fbet) + cash;
 				var pfwin = (((pbet + pbet) + fbet) + fbet) + cash;
-				var _p10 = _p0._0;
-				var face1 = _p10._0;
-				var face2 = _p10._1;
+				var _p11 = _p0._0;
+				var face1 = _p11._0;
+				var face2 = _p11._1;
 				var rollSum = face1 + face2;
 				return ((_elm_lang$core$Native_Utils.eq(rollSum, 7) || _elm_lang$core$Native_Utils.eq(rollSum, 11)) && _elm_lang$core$Native_Utils.eq(model.firstRoll, true)) ? (_elm_lang$core$Native_Utils.eq(rollSum, 7) ? {
 					ctor: '_Tuple2',
@@ -9517,7 +10142,56 @@ var _user$project$FinalProj$view = function (model) {
 																							_0: _elm_lang$html$Html$text('Reset Game'),
 																							_1: {ctor: '[]'}
 																						}),
-																					_1: {ctor: '[]'}
+																					_1: {
+																						ctor: '::',
+																						_0: A2(
+																							_elm_lang$html$Html$div,
+																							{ctor: '[]'},
+																							{
+																								ctor: '::',
+																								_0: _elm_lang$html$Html$text('-------------------------------------'),
+																								_1: {ctor: '[]'}
+																							}),
+																						_1: {
+																							ctor: '::',
+																							_0: A2(
+																								_elm_lang$html$Html$button,
+																								{
+																									ctor: '::',
+																									_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$ShowRules),
+																									_1: {ctor: '[]'}
+																								},
+																								{
+																									ctor: '::',
+																									_0: _elm_lang$html$Html$text('Show/Hide Rules'),
+																									_1: {ctor: '[]'}
+																								}),
+																							_1: {
+																								ctor: '::',
+																								_0: A2(
+																									_elm_lang$html$Html$div,
+																									{ctor: '[]'},
+																									{
+																										ctor: '::',
+																										_0: _elm_lang$html$Html$text('-------------------------------------'),
+																										_1: {ctor: '[]'}
+																									}),
+																								_1: {
+																									ctor: '::',
+																									_0: A2(
+																										_elm_lang$html$Html$img,
+																										{
+																											ctor: '::',
+																											_0: _elm_lang$html$Html_Attributes$src(
+																												_user$project$FinalProj$srules(model.toggle)),
+																											_1: {ctor: '[]'}
+																										},
+																										{ctor: '[]'}),
+																									_1: {ctor: '[]'}
+																								}
+																							}
+																						}
+																					}
 																				}
 																			}
 																		}
