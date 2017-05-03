@@ -1,10 +1,14 @@
-import Html exposing (Html, button, div, text)
-import Html.Events exposing (onClick)
+module FinalProj exposing (..)
+import Html exposing (..)
+import Html.Events exposing (..)
 import Random
+import Html.Attributes exposing (..)
+import String exposing (concat)
 
 -- what started as Elm tutorial code with added reset button
 -- has turned into an attempt to simulate a simple craps table
 -- starting with the pass line bet and may add more later
+main : Program Never Model Msg
 main =
   Html.program { init = init, view = view, update = update, subscriptions = subscriptions }
 
@@ -17,60 +21,175 @@ main =
 --if in point round, you have a point (the roll that got you to the round)
 --in order to win, you must roll the point again before rolling a 7
 
-
-
-type Status = Come | Point
+init : (Model, Cmd Msg)
+init =
+  (initialState, Cmd.none)
 
 type alias Model =
   { point : Int
   , cash : Int
-  , status : Status
+  , firstRoll : Bool
   , bet : Int
+  , die1 : Int
+  , die2 : Int
   }
 
-init : Model
-init =
+initialState : Model
+initialState =
   { point = 0
   , cash = 100
-  , status = Come
-  , bet = 0}
+  , firstRoll = True
+  , bet = 0
+  , die1 = 0
+  , die2 = 0
+  }
 
 
 -- UPDATE
 
-type Msg = Bet | Roll | NewFace | Reset
+type Msg = PBet1 | PBet5 | PBet10 | PBetAll | Roll | NewFace (Int, Int) | Reset
 
 update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Bet ->
-      (model.bet + 1, Cmd.none)
-      (model.cash - 1, Cmd.none)
+    PBet1 ->
+      let
+        { bet, cash } = model
+        newBet = bet + 1
+        newCash = cash - 1
+
+      --  newBet =
+      --    if .... then
+      --      bet + 1
+      --    else if ... then
+      --      ..
+      --    else
+      --      bet - 1
+      in
+        ({ model |
+            bet = newBet,
+            cash = newCash}, Cmd.none)
+
+    PBet5 ->
+      let
+        { bet, cash } = model
+        newBet = bet + 5
+        newCash = cash - 5
+
+      in
+        ({ model |
+            bet = newBet,
+            cash = newCash}, Cmd.none)
+
+    PBet10 ->
+      let
+        { bet, cash } = model
+        newBet = bet + 10
+        newCash = cash - 10
+
+      in
+        ({ model |
+            bet = newBet,
+            cash = newCash}, Cmd.none)
+
+    PBetAll ->
+      let
+        { bet, cash } = model
+        newBet = bet + cash
+        newCash = 0
+
+      in
+        ({ model |
+            bet = newBet,
+            cash = newCash}, Cmd.none)
 
     Roll ->
-      (model, Cmd.none)
+      (model, Random.generate NewFace (Random.pair (Random.int 1 6) (Random.int 1 6)))
 
     Reset ->
-      (init, Cmd.none)
+      (initialState, Cmd.none)
 
-makeBet : Msg -> Model -> (Model, Cmd Msg)
-makeBet bet cmodel =
-  cmodel.bet + 1
-  cmodel.cash - 1
+    NewFace newface ->
+      let
+        (face1, face2) = newface
+        rollSum = face1 + face2
+        { bet, cash } = model
+        newBet = 0
+        newCash = cash + bet + bet
+
+      in
+        if (rollSum == 7 || rollSum == 11) && model.firstRoll == True then
+            ({model |
+              die1 = face1,
+              die2 = face2,
+              bet = newBet,
+              cash = newCash,
+              firstRoll = True},Cmd.none)
+        else if (rollSum == 2 || rollSum == 3 || rollSum == 12) && model.firstRoll == True then
+          ({model |
+            die1 = face1,
+            die2 = face2,
+            bet = newBet,
+            firstRoll = True}, Cmd.none)
+        else if (model.firstRoll == True) then
+          ({model |
+            die1 = face1,
+            die2 = face2,
+            point = rollSum,
+            firstRoll = False}, Cmd.none)
+        else if (rollSum == model.point) then
+          ({model |
+            die1 = face1,
+            die2 = face2,
+            point = 0,
+            firstRoll = True,
+            cash = newCash,
+            bet = newBet}, Cmd.none)
+        else if (rollSum == 7) then
+          ({model |
+            die1 = face1,
+            die2 = face2,
+            point = 0,
+            firstRoll = True,
+            bet = newBet}, Cmd.none)
+        else
+          ({model |
+            die1 = face1,
+            die2 = face2}, Cmd.none)
+
+
 
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
   Sub.none
 
+
+
+--UTILITIES
+
+createImage : Int -> String
+createImage d1 =
+    concat ["d", (toString d1), ".jpg"]
+
+
 -- VIEW
 
 view : Model -> Html Msg
 view model =
   div []
-    [ button [ onClick Bet ] [ text "Increase Bet $1" ]
-    , div [] [ text (toString model.cash) ]
-    , div [] [ text (toString model.bet)  ]
+    [ div [] [ text ("Current Pass Line Bet: $" ++ (toString model.bet)
+      ++ "  Come Out Roll: " ++ (toString model.firstRoll)) ]
+    , button [ onClick PBet1 ] [ text "Increase Pass Line Bet $1" ]
+    , button [ onClick PBet5 ] [ text "Increase Pass Line Bet $5" ]
+    , button [ onClick PBet10 ] [ text "Increase Pass Line Bet $10" ]
+    , button [ onClick PBetAll ] [ text "Bet All Cash Pass Line" ]
+    , div [] [ text ("-------------------------------------")]
+    , img [src (createImage model.die1)] []
+    , img [src (createImage model.die2)] []
+    , div [] [ text ("Die Sum: " ++ (toString (model.die2 + model.die1))) ]
+    , div [] [ text ("Current Point: " ++ (toString model.point)) ]
+    , div [] [ text ("Current Cash: " ++ (toString model.cash))]
     , button [ onClick Roll ] [ text "Roll Die" ]
     , button [ onClick Reset ] [ text "Reset Game"]
     ]
