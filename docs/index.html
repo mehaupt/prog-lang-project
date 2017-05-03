@@ -9037,12 +9037,16 @@ var _user$project$FinalProj$createImage = function (d1) {
 var _user$project$FinalProj$subscriptions = function (model) {
 	return _elm_lang$core$Platform_Sub$none;
 };
-var _user$project$FinalProj$initialState = {point: 0, cash: 100, firstRoll: true, bet: 0, die1: 0, die2: 0};
+var _user$project$FinalProj$initialState = {point: 0, cash: 100, firstRoll: true, pbet: 0, fbet: 0, die1: 0, die2: 0};
 var _user$project$FinalProj$init = {ctor: '_Tuple2', _0: _user$project$FinalProj$initialState, _1: _elm_lang$core$Platform_Cmd$none};
-var _user$project$FinalProj$Model = F6(
-	function (a, b, c, d, e, f) {
-		return {point: a, cash: b, firstRoll: c, bet: d, die1: e, die2: f};
+var _user$project$FinalProj$Model = F7(
+	function (a, b, c, d, e, f, g) {
+		return {point: a, cash: b, firstRoll: c, pbet: d, fbet: e, die1: f, die2: g};
 	});
+var _user$project$FinalProj$FBetAll = {ctor: 'FBetAll'};
+var _user$project$FinalProj$FBet10 = {ctor: 'FBet10'};
+var _user$project$FinalProj$FBet5 = {ctor: 'FBet5'};
+var _user$project$FinalProj$FBet1 = {ctor: 'FBet1'};
 var _user$project$FinalProj$Reset = {ctor: 'Reset'};
 var _user$project$FinalProj$NewFace = function (a) {
 	return {ctor: 'NewFace', _0: a};
@@ -9053,54 +9057,106 @@ var _user$project$FinalProj$update = F2(
 		switch (_p0.ctor) {
 			case 'PBet1':
 				var _p1 = model;
-				var bet = _p1.bet;
+				var pbet = _p1.pbet;
 				var cash = _p1.cash;
-				var newBet = bet + 1;
+				var newpBet = pbet + 1;
 				var newCash = cash - 1;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{bet: newBet, cash: newCash}),
+						{pbet: newpBet, cash: newCash}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'PBet5':
 				var _p2 = model;
-				var bet = _p2.bet;
+				var pbet = _p2.pbet;
 				var cash = _p2.cash;
-				var newBet = bet + 5;
+				var newpBet = pbet + 5;
 				var newCash = cash - 5;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{bet: newBet, cash: newCash}),
+						{pbet: newpBet, cash: newCash}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'PBet10':
 				var _p3 = model;
-				var bet = _p3.bet;
+				var pbet = _p3.pbet;
 				var cash = _p3.cash;
-				var newBet = bet + 10;
+				var newpBet = pbet + 10;
 				var newCash = cash - 10;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{bet: newBet, cash: newCash}),
+						{pbet: newpBet, cash: newCash}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'PBetAll':
 				var newCash = 0;
 				var _p4 = model;
-				var bet = _p4.bet;
+				var pbet = _p4.pbet;
 				var cash = _p4.cash;
-				var newBet = bet + cash;
+				var newpBet = pbet + cash;
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{bet: newBet, cash: newCash}),
+						{pbet: newpBet, cash: newCash}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'FBet1':
+				var _p5 = model;
+				var fbet = _p5.fbet;
+				var cash = _p5.cash;
+				var newfBet = fbet + 1;
+				var newCash = cash - 1;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{fbet: newfBet, cash: newCash}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'FBet5':
+				var _p6 = model;
+				var fbet = _p6.fbet;
+				var cash = _p6.cash;
+				var newfBet = fbet + 5;
+				var newCash = cash - 5;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{fbet: newfBet, cash: newCash}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'FBet10':
+				var _p7 = model;
+				var fbet = _p7.fbet;
+				var cash = _p7.cash;
+				var newfBet = fbet + 10;
+				var newCash = cash - 10;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{fbet: newfBet, cash: newCash}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				};
+			case 'FBetAll':
+				var newCash = 0;
+				var _p8 = model;
+				var fbet = _p8.fbet;
+				var cash = _p8.cash;
+				var newfBet = fbet + cash;
+				return {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{fbet: newfBet, cash: newCash}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'Roll':
@@ -9118,52 +9174,80 @@ var _user$project$FinalProj$update = F2(
 			case 'Reset':
 				return {ctor: '_Tuple2', _0: _user$project$FinalProj$initialState, _1: _elm_lang$core$Platform_Cmd$none};
 			default:
-				var newBet = 0;
-				var _p5 = model;
-				var bet = _p5.bet;
-				var cash = _p5.cash;
-				var newCash = (cash + bet) + bet;
-				var _p6 = _p0._0;
-				var face1 = _p6._0;
-				var face2 = _p6._1;
+				var newfBet = 0;
+				var newpBet = 0;
+				var _p9 = model;
+				var pbet = _p9.pbet;
+				var cash = _p9.cash;
+				var fbet = _p9.fbet;
+				var pwin = (pbet + pbet) + cash;
+				var fwin = (fbet + fbet) + cash;
+				var pfwin = (((pbet + pbet) + fbet) + fbet) + cash;
+				var _p10 = _p0._0;
+				var face1 = _p10._0;
+				var face2 = _p10._1;
 				var rollSum = face1 + face2;
-				return ((_elm_lang$core$Native_Utils.eq(rollSum, 7) || _elm_lang$core$Native_Utils.eq(rollSum, 11)) && _elm_lang$core$Native_Utils.eq(model.firstRoll, true)) ? {
+				return ((_elm_lang$core$Native_Utils.eq(rollSum, 7) || _elm_lang$core$Native_Utils.eq(rollSum, 11)) && _elm_lang$core$Native_Utils.eq(model.firstRoll, true)) ? (_elm_lang$core$Native_Utils.eq(rollSum, 7) ? {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{die1: face1, die2: face2, bet: newBet, cash: newCash, firstRoll: true}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				} : (((_elm_lang$core$Native_Utils.eq(rollSum, 2) || (_elm_lang$core$Native_Utils.eq(rollSum, 3) || _elm_lang$core$Native_Utils.eq(rollSum, 12))) && _elm_lang$core$Native_Utils.eq(model.firstRoll, true)) ? {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{die1: face1, die2: face2, bet: newBet, firstRoll: true}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				} : (_elm_lang$core$Native_Utils.eq(model.firstRoll, true) ? {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{die1: face1, die2: face2, point: rollSum, firstRoll: false}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				} : (_elm_lang$core$Native_Utils.eq(rollSum, model.point) ? {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{die1: face1, die2: face2, point: 0, firstRoll: true, cash: newCash, bet: newBet}),
-					_1: _elm_lang$core$Platform_Cmd$none
-				} : (_elm_lang$core$Native_Utils.eq(rollSum, 7) ? {
-					ctor: '_Tuple2',
-					_0: _elm_lang$core$Native_Utils.update(
-						model,
-						{die1: face1, die2: face2, point: 0, firstRoll: true, bet: newBet}),
+						{die1: face1, die2: face2, pbet: newpBet, fbet: newfBet, cash: pwin, firstRoll: true}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				} : {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{die1: face1, die2: face2}),
+						{die1: face1, die2: face2, pbet: newpBet, fbet: newfBet, cash: pfwin, firstRoll: true}),
 					_1: _elm_lang$core$Platform_Cmd$none
-				}))));
+				}) : (((_elm_lang$core$Native_Utils.eq(rollSum, 2) || (_elm_lang$core$Native_Utils.eq(rollSum, 3) || _elm_lang$core$Native_Utils.eq(rollSum, 12))) && _elm_lang$core$Native_Utils.eq(model.firstRoll, true)) ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{die1: face1, die2: face2, pbet: newpBet, cash: fwin, fbet: newfBet, firstRoll: true}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				} : (_elm_lang$core$Native_Utils.eq(model.firstRoll, true) ? ((_elm_lang$core$Native_Utils.eq(rollSum, 5) || (_elm_lang$core$Native_Utils.eq(rollSum, 6) || _elm_lang$core$Native_Utils.eq(rollSum, 8))) ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{die1: face1, die2: face2, fbet: newfBet, point: rollSum, firstRoll: false}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				} : {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{die1: face1, die2: face2, fbet: newfBet, cash: fwin, point: rollSum, firstRoll: false}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				}) : (_elm_lang$core$Native_Utils.eq(rollSum, model.point) ? ((_elm_lang$core$Native_Utils.eq(rollSum, 5) || (_elm_lang$core$Native_Utils.eq(rollSum, 6) || _elm_lang$core$Native_Utils.eq(rollSum, 8))) ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{die1: face1, die2: face2, point: 0, firstRoll: true, cash: pwin, fbet: newfBet, pbet: newpBet}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				} : {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{die1: face1, die2: face2, point: 0, firstRoll: true, cash: pfwin, fbet: newfBet, pbet: newpBet}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				}) : (_elm_lang$core$Native_Utils.eq(rollSum, 7) ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{die1: face1, die2: face2, point: 0, firstRoll: true, fbet: newfBet, pbet: newpBet}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				} : ((_elm_lang$core$Native_Utils.eq(rollSum, 5) || (_elm_lang$core$Native_Utils.eq(rollSum, 6) || _elm_lang$core$Native_Utils.eq(rollSum, 8))) ? {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{die1: face1, die2: face2, fbet: newfBet}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				} : {
+					ctor: '_Tuple2',
+					_0: _elm_lang$core$Native_Utils.update(
+						model,
+						{die1: face1, die2: face2, fbet: newfBet, cash: fwin}),
+					_1: _elm_lang$core$Platform_Cmd$none
+				})))));
 		}
 	});
 var _user$project$FinalProj$Roll = {ctor: 'Roll'};
@@ -9182,31 +9266,27 @@ var _user$project$FinalProj$view = function (model) {
 				{ctor: '[]'},
 				{
 					ctor: '::',
-					_0: _elm_lang$html$Html$text(
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'Current Pass Line Bet: $',
-							A2(
-								_elm_lang$core$Basics_ops['++'],
-								_elm_lang$core$Basics$toString(model.bet),
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									'  Come Out Roll: ',
-									_elm_lang$core$Basics$toString(model.firstRoll))))),
+					_0: _elm_lang$html$Html$text('***********BETS***********'),
 					_1: {ctor: '[]'}
 				}),
 			_1: {
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$button,
+					_elm_lang$html$Html$div,
+					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$PBet1),
-						_1: {ctor: '[]'}
-					},
-					{
-						ctor: '::',
-						_0: _elm_lang$html$Html$text('Increase Pass Line Bet $1'),
+						_0: _elm_lang$html$Html$text(
+							A2(
+								_elm_lang$core$Basics_ops['++'],
+								'Current Pass Line Bet: $',
+								A2(
+									_elm_lang$core$Basics_ops['++'],
+									_elm_lang$core$Basics$toString(model.pbet),
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										'  Come Out Roll: ',
+										_elm_lang$core$Basics$toString(model.firstRoll))))),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -9215,12 +9295,12 @@ var _user$project$FinalProj$view = function (model) {
 						_elm_lang$html$Html$button,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$PBet5),
+							_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$PBet1),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('Increase Pass Line Bet $5'),
+							_0: _elm_lang$html$Html$text('Increase Pass Line Bet $1'),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
@@ -9229,12 +9309,12 @@ var _user$project$FinalProj$view = function (model) {
 							_elm_lang$html$Html$button,
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$PBet10),
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$PBet5),
 								_1: {ctor: '[]'}
 							},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text('Increase Pass Line Bet $10'),
+								_0: _elm_lang$html$Html$text('Increase Pass Line Bet $5'),
 								_1: {ctor: '[]'}
 							}),
 						_1: {
@@ -9243,117 +9323,207 @@ var _user$project$FinalProj$view = function (model) {
 								_elm_lang$html$Html$button,
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$PBetAll),
+									_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$PBet10),
 									_1: {ctor: '[]'}
 								},
 								{
 									ctor: '::',
-									_0: _elm_lang$html$Html$text('Bet All Cash Pass Line'),
+									_0: _elm_lang$html$Html$text('Increase Pass Line Bet $10'),
 									_1: {ctor: '[]'}
 								}),
 							_1: {
 								ctor: '::',
 								_0: A2(
-									_elm_lang$html$Html$div,
-									{ctor: '[]'},
+									_elm_lang$html$Html$button,
 									{
 										ctor: '::',
-										_0: _elm_lang$html$Html$text('-------------------------------------'),
+										_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$PBetAll),
+										_1: {ctor: '[]'}
+									},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Bet All Cash Pass Line'),
 										_1: {ctor: '[]'}
 									}),
 								_1: {
 									ctor: '::',
 									_0: A2(
-										_elm_lang$html$Html$img,
+										_elm_lang$html$Html$div,
+										{ctor: '[]'},
 										{
 											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$src(
-												_user$project$FinalProj$createImage(model.die1)),
+											_0: _elm_lang$html$Html$text(
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													'Current Field Bet: $',
+													_elm_lang$core$Basics$toString(model.fbet))),
 											_1: {ctor: '[]'}
-										},
-										{ctor: '[]'}),
+										}),
 									_1: {
 										ctor: '::',
 										_0: A2(
-											_elm_lang$html$Html$img,
+											_elm_lang$html$Html$button,
 											{
 												ctor: '::',
-												_0: _elm_lang$html$Html_Attributes$src(
-													_user$project$FinalProj$createImage(model.die2)),
+												_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$FBet1),
 												_1: {ctor: '[]'}
 											},
-											{ctor: '[]'}),
+											{
+												ctor: '::',
+												_0: _elm_lang$html$Html$text('Increase Field Bet $1'),
+												_1: {ctor: '[]'}
+											}),
 										_1: {
 											ctor: '::',
 											_0: A2(
-												_elm_lang$html$Html$div,
-												{ctor: '[]'},
+												_elm_lang$html$Html$button,
 												{
 													ctor: '::',
-													_0: _elm_lang$html$Html$text(
-														A2(
-															_elm_lang$core$Basics_ops['++'],
-															'Die Sum: ',
-															_elm_lang$core$Basics$toString(model.die2 + model.die1))),
+													_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$FBet5),
+													_1: {ctor: '[]'}
+												},
+												{
+													ctor: '::',
+													_0: _elm_lang$html$Html$text('Increase Field Bet $5'),
 													_1: {ctor: '[]'}
 												}),
 											_1: {
 												ctor: '::',
 												_0: A2(
-													_elm_lang$html$Html$div,
-													{ctor: '[]'},
+													_elm_lang$html$Html$button,
 													{
 														ctor: '::',
-														_0: _elm_lang$html$Html$text(
-															A2(
-																_elm_lang$core$Basics_ops['++'],
-																'Current Point: ',
-																_elm_lang$core$Basics$toString(model.point))),
+														_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$FBet10),
+														_1: {ctor: '[]'}
+													},
+													{
+														ctor: '::',
+														_0: _elm_lang$html$Html$text('Increase Field Bet $10'),
 														_1: {ctor: '[]'}
 													}),
 												_1: {
 													ctor: '::',
 													_0: A2(
-														_elm_lang$html$Html$div,
-														{ctor: '[]'},
+														_elm_lang$html$Html$button,
 														{
 															ctor: '::',
-															_0: _elm_lang$html$Html$text(
-																A2(
-																	_elm_lang$core$Basics_ops['++'],
-																	'Current Cash: ',
-																	_elm_lang$core$Basics$toString(model.cash))),
+															_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$FBetAll),
+															_1: {ctor: '[]'}
+														},
+														{
+															ctor: '::',
+															_0: _elm_lang$html$Html$text('Bet All Cash Field'),
 															_1: {ctor: '[]'}
 														}),
 													_1: {
 														ctor: '::',
 														_0: A2(
-															_elm_lang$html$Html$button,
+															_elm_lang$html$Html$div,
+															{ctor: '[]'},
 															{
 																ctor: '::',
-																_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$Roll),
-																_1: {ctor: '[]'}
-															},
-															{
-																ctor: '::',
-																_0: _elm_lang$html$Html$text('Roll Die'),
+																_0: _elm_lang$html$Html$text('-------------------------------------'),
 																_1: {ctor: '[]'}
 															}),
 														_1: {
 															ctor: '::',
 															_0: A2(
-																_elm_lang$html$Html$button,
+																_elm_lang$html$Html$img,
 																{
 																	ctor: '::',
-																	_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$Reset),
+																	_0: _elm_lang$html$Html_Attributes$src(
+																		_user$project$FinalProj$createImage(model.die1)),
 																	_1: {ctor: '[]'}
 																},
-																{
+																{ctor: '[]'}),
+															_1: {
+																ctor: '::',
+																_0: A2(
+																	_elm_lang$html$Html$img,
+																	{
+																		ctor: '::',
+																		_0: _elm_lang$html$Html_Attributes$src(
+																			_user$project$FinalProj$createImage(model.die2)),
+																		_1: {ctor: '[]'}
+																	},
+																	{ctor: '[]'}),
+																_1: {
 																	ctor: '::',
-																	_0: _elm_lang$html$Html$text('Reset Game'),
-																	_1: {ctor: '[]'}
-																}),
-															_1: {ctor: '[]'}
+																	_0: A2(
+																		_elm_lang$html$Html$div,
+																		{ctor: '[]'},
+																		{
+																			ctor: '::',
+																			_0: _elm_lang$html$Html$text(
+																				A2(
+																					_elm_lang$core$Basics_ops['++'],
+																					'Die Sum: ',
+																					_elm_lang$core$Basics$toString(model.die2 + model.die1))),
+																			_1: {ctor: '[]'}
+																		}),
+																	_1: {
+																		ctor: '::',
+																		_0: A2(
+																			_elm_lang$html$Html$div,
+																			{ctor: '[]'},
+																			{
+																				ctor: '::',
+																				_0: _elm_lang$html$Html$text(
+																					A2(
+																						_elm_lang$core$Basics_ops['++'],
+																						'Current Point: ',
+																						_elm_lang$core$Basics$toString(model.point))),
+																				_1: {ctor: '[]'}
+																			}),
+																		_1: {
+																			ctor: '::',
+																			_0: A2(
+																				_elm_lang$html$Html$div,
+																				{ctor: '[]'},
+																				{
+																					ctor: '::',
+																					_0: _elm_lang$html$Html$text(
+																						A2(
+																							_elm_lang$core$Basics_ops['++'],
+																							'Current Cash: ',
+																							_elm_lang$core$Basics$toString(model.cash))),
+																					_1: {ctor: '[]'}
+																				}),
+																			_1: {
+																				ctor: '::',
+																				_0: A2(
+																					_elm_lang$html$Html$button,
+																					{
+																						ctor: '::',
+																						_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$Roll),
+																						_1: {ctor: '[]'}
+																					},
+																					{
+																						ctor: '::',
+																						_0: _elm_lang$html$Html$text('Roll Die'),
+																						_1: {ctor: '[]'}
+																					}),
+																				_1: {
+																					ctor: '::',
+																					_0: A2(
+																						_elm_lang$html$Html$button,
+																						{
+																							ctor: '::',
+																							_0: _elm_lang$html$Html_Events$onClick(_user$project$FinalProj$Reset),
+																							_1: {ctor: '[]'}
+																						},
+																						{
+																							ctor: '::',
+																							_0: _elm_lang$html$Html$text('Reset Game'),
+																							_1: {ctor: '[]'}
+																						}),
+																					_1: {ctor: '[]'}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
 														}
 													}
 												}
